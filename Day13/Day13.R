@@ -1,29 +1,55 @@
 input = readLines("Day13/Input13_1.txt")
-input_df = data.frame(
-  Depth = as.numeric(gsub(":.*", "", input)),
-  Range = as.numeric(gsub(".* ", "", input)),
-  Pos = 1, 
-  Dir = "+",
-  stringsAsFactors = F
-)
-###################### PART 1 ######################
-layer_index = 0
-score = 0
-while(layer_index <= max(input_df$Depth)){
-  firewall_base = input_df[input_df$Depth == layer_index, ]
-  if(nrow(firewall_base) != 0)
-    if(firewall_base$Pos == 1)
-      score = score + layer_index * firewall_base$Range
-  # Update firewall
-  input_df$Pos[input_df$Dir == "+"] = input_df$Pos[input_df$Dir == "+"] + 1
-  input_df$Pos[input_df$Dir == "-"] = input_df$Pos[input_df$Dir == "-"] - 1
-  input_df$Dir[input_df$Pos == input_df$Range] = "-"
-  input_df$Dir[input_df$Pos == 1] = "+"
-  # Update position
-  layer_index = layer_index + 1
-}
-score
+dept = as.numeric(gsub(":.*", "", input))
+range = as.numeric(gsub(".* ", "", input))
+pos = rep(1, length(range))
+dir = rep("+", length(range))
+max_dept = max(dept)
 
+###################### PART 1 ######################
+run_through = function(dept, range, pos, dir, max_dept, type){
+  layer_index = 0
+  score = 0
+  while(layer_index <= max_dept){
+    firewall_base = which(dept == layer_index)
+    if(length(firewall_base) != 0)
+      if(pos[firewall_base] == 1){
+        score = score + layer_index * range[firewall_base]
+        if(type == "caught")
+          return(TRUE)
+      }
+    # Update firewall
+    positives = dir == "+"
+    negatives = dir == "-"
+    pos[positives] = pos[positives] + 1
+    pos[negatives] = pos[negatives] - 1
+    max_range = pos == range
+    dir[max_range] = "-"
+    min_range = pos == 1
+    dir[min_range] = "+"
+    # Update position
+    layer_index = layer_index + 1
+  }
+  if(type == "caught")
+    return(FALSE)
+  score
+}
+run_through(dept, range, pos, dir, max_dept, "score")
 
 ###################### PART 2 ######################
-
+caught = TRUE
+wait = 0
+while(caught){
+  # Update firewall
+  positives = dir == "+"
+  negatives = dir == "-"
+  pos[positives] = pos[positives] + 1
+  pos[negatives] = pos[negatives] - 1
+  max_range = pos == range
+  dir[max_range] = "-"
+  min_range = pos == 1
+  dir[min_range] = "+"
+  # Run Through
+  caught = run_through(dept, range, pos, dir, max_dept, "caught")
+  wait = wait + 1
+}
+wait
