@@ -1,5 +1,4 @@
 library(BMS)
-library(dplyr)
 input = readLines("Day14/Input14_1.txt")
 
 ###################### PART 1 ######################
@@ -22,7 +21,6 @@ knot_hash = function(hash){
   paste0(hexadecimal, collapse = "")
 }
 part1matrix = sapply(sapply(paste(input, 0:127, sep = "-"), knot_hash), hex2bin)
-sum(part1matrix)
 
 ###################### PART 2 ######################
 # Utility function to find left and upper neighbor
