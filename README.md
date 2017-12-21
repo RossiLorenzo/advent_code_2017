@@ -12,7 +12,7 @@ Finally, the R file CreateDay.R is just an utility that I use to quickly create 
 
 ## The tree
 
-Here you can see the growing bitmap-art tree growing in time:
+Here you can see the bitmap-art tree growing in time:
 
 ![](https://github.com/RossiLorenzo/advent_code_2017/blob/master/tree.png)
 
